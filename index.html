@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SMPS Course — Learn. Grow. Certify.</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+</head>
+
+<body>
+
+    <!-- ============================================================
+     OVERLAY / MODAL LAYER
+     ============================================================ -->
+    <div id="modalOverlay" class="modal-overlay hidden" onclick="closeModal()"></div>
+
+    <!-- AUTH MODAL -->
+    <div id="authModal" class="modal hidden">
+        <button class="modal-close" onclick="closeModal()">✕</button>
+        <div class="auth-tabs">
+            <button class="auth-tab active" id="loginTab" onclick="switchAuthTab('login')">Login</button>
+            <button class="auth-tab" id="signupTab" onclick="switchAuthTab('signup')">Sign Up</button>
+        </div>
+
+        <!-- Login Form -->
+        <div id="loginForm" class="auth-form">
+            <h2>Welcome back</h2>
+            <p class="auth-subtitle">Continue your learning journey</p>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="loginEmail" placeholder="you@example.com" />
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="loginPassword" placeholder="••••••••" />
+            </div>
+
+            <button class="btn-primary full-width" onclick="handleLogin()">Login</button>
+            <p id="loginError" class="error-msg hidden"></p>
+        </div>
+
+        <!-- Signup Form -->
+        <div id="signupForm" class="auth-form hidden">
+            <h2>Create account</h2>
+            <p class="auth-subtitle">Start learning for free today</p>
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="signupName" placeholder="Your full name" />
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="signupEmail" placeholder="you@example.com" />
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="signupPassword" placeholder="Min. 6 characters" />
+            </div>
+            <button class="btn-primary full-width" onclick="handleSignup()">Create Account</button>
+            <p id="signupError" class="error-msg hidden"></p>
+        </div>
+    </div>
+
+    <!-- CERTIFICATE PREVIEW MODAL -->
+    <div id="certModal" class="modal cert-modal hidden">
+        <button class="modal-close" onclick="closeModal()">✕</button>
+        <div id="certPreview" class="cert-preview">
+            <!-- Filled dynamically -->
+        </div>
+        <div class="cert-actions">
+            <button class="btn-primary" onclick="downloadCertificate()">⬇ Download PDF</button>
+            <button class="btn-outline" onclick="verifyCertFromModal()">🔍 Verify</button>
+        </div>
+    </div>
+
+    <!-- QUIZ MODAL -->
+    <div id="quizModal" class="modal quiz-modal hidden">
+        <button class="modal-close" onclick="closeModal()">✕</button>
+        <div id="quizContent"><!-- Filled dynamically --></div>
+    </div>
+
+    <!-- ============================================================
+     NAVIGATION
+     ============================================================ -->
+    <nav id="navbar" class="navbar">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo" onclick="navigate('home')">
+                <span class="logo-icon">⚡</span>
+                <span class="logo-text">SMPS<em>Course</em></span>
+            </a>
+            <div class="nav-links" id="navLinks">
+                <a href="#" onclick="navigate('courses')" class="nav-link">Courses</a>
+                <a href="#" onclick="navigate('verify')" class="nav-link">Verify Certificate</a>
+                <div id="navAuthButtons" class="nav-auth">
+                    <button class="btn-ghost" onclick="openModal('auth', 'login')">Login</button>
+                    <button class="btn-primary" onclick="openModal('auth', 'signup')">Sign Up Free</button>
+                </div>
+                <div id="navUserMenu" class="nav-user hidden">
+                    <a href="#" onclick="navigate('dashboard')" class="nav-link">Dashboard</a>
+                    <div class="user-avatar" id="userAvatar" onclick="toggleUserDropdown()">
+                        <span id="userInitial">U</span>
+                    </div>
+                    <div class="user-dropdown hidden" id="userDropdown">
+                        <span id="dropdownName" class="dropdown-name"></span>
+                        <a href="#" onclick="navigate('dashboard')">📚 My Learning</a>
+                        <a href="#" onclick="navigate('certificates')">🏆 Certificates</a>
+                        <a href="#" id="adminPanelLink" onclick="navigate('admin')" class="hidden">⚙️ Admin Panel</a>
+                        <hr />
+                        <a href="#" onclick="handleLogout()" class="logout-link">🚪 Logout</a>
+                    </div>
+                </div>
+            </div>
+            <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()">☰</button>
+        </div>
+    </nav>
+
+    <!-- ============================================================
+     PAGE: HOME
+     ============================================================ -->
+    <main id="app">
+
+        <section id="page-home" class="page active">
+
+            <!-- Hero -->
+            <div class="hero">
+                <div class="hero-bg-shapes">
+                    <div class="shape s1"></div>
+                    <div class="shape s2"></div>
+                    <div class="shape s3"></div>
+                </div>
+                <div class="hero-content">
+                    <div class="hero-badge">🚀 New courses added weekly</div>
+                    <h1 class="hero-title">
+                        Learn skills that<br />
+                        <span class="accent-text">actually matter.</span>
+                    </h1>
+                    <p class="hero-sub">
+                        Join thousands of learners mastering in-demand skills. Get certified. Get hired.
+                    </p>
+                    <div class="hero-cta">
+                        <button class="btn-primary btn-large" onclick="navigate('courses')">Explore Courses</button>
+                        <button class="btn-ghost btn-large" onclick="openModal('auth','signup')">Start Free →</button>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat"><strong>12,400+</strong><span>Students</span></div>
+                        <div class="stat-divider"></div>
+                        <div class="stat"><strong>80+</strong><span>Courses</span></div>
+                        <div class="stat-divider"></div>
+                        <div class="stat"><strong>95%</strong><span>Completion Rate</span></div>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="hero-card floating">
+                        <div class="hc-icon">📐</div>
+                        <div class="hc-text">
+                            <strong>Switch Mode Power Supply</strong>
+                            <span>Engineering Fundamentals</span>
+                        </div>
+                        <div class="hc-badge">⭐ 4.9</div>
+                    </div>
+                    <div class="hero-card floating delay-1">
+                        <div class="hc-icon">🔌</div>
+                        <div class="hc-text">
+                            <strong>Power Electronics</strong>
+                            <span>Advanced Circuit Design</span>
+                        </div>
+                        <div class="hc-badge">⭐ 4.8</div>
+                    </div>
+                    <div class="hero-card floating delay-2">
+                        <div class="hc-icon">🏆</div>
+                        <div class="hc-text">
+                            <strong>Certificate Earned!</strong>
+                            <span>Congratulations, Alex</span>
+                        </div>
+                        <div class="hc-badge green">✓</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categories -->
+            <section class="section categories-section">
+                <div class="container">
+                    <div class="section-header">
+                        <h2>Browse by Category</h2>
+                        <p>Find the perfect course for your goals</p>
+                    </div>
+                    <div class="categories-grid" id="categoriesGrid">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Featured Courses -->
+            <section class="section featured-section">
+                <div class="container">
+                    <div class="section-header">
+                        <h2>Featured Courses</h2>
+                        <a href="#" class="view-all" onclick="navigate('courses')">View all →</a>
+                    </div>
+                    <div class="courses-grid" id="featuredCourses">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- How it Works -->
+            <section class="section how-section">
+                <div class="container">
+                    <div class="section-header">
+                        <h2>How It Works</h2>
+                    </div>
+                    <div class="steps-grid">
+                        <div class="step">
+                            <div class="step-num">01</div>
+                            <div class="step-icon">🔍</div>
+                            <h3>Browse & Enroll</h3>
+                            <p>Explore our library and enroll in any course that matches your goals.</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">02</div>
+                            <div class="step-icon">📺</div>
+                            <h3>Learn at Your Pace</h3>
+                            <p>Watch video lessons, read materials, and complete exercises anytime.</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">03</div>
+                            <div class="step-icon">📝</div>
+                            <h3>Take the Quiz</h3>
+                            <p>Prove your knowledge with our carefully crafted assessments.</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">04</div>
+                            <div class="step-icon">🏆</div>
+                            <h3>Get Certified</h3>
+                            <p>Download your unique certificate and share it with the world.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CTA Banner -->
+            <section class="cta-banner">
+                <div class="container">
+                    <h2>Ready to level up your skills?</h2>
+                    <p>Join thousands of professionals already learning on SMPS Course.</p>
+                    <button class="btn-primary btn-large" onclick="openModal('auth','signup')">Get Started — It's
+                        Free</button>
+                </div>
+            </section>
+
+        </section>
+
+        <!-- ============================================================
+     PAGE: COURSES
+     ============================================================ -->
+        <section id="page-courses" class="page hidden">
+            <div class="page-header-bar">
+                <div class="container">
+                    <h1>All Courses</h1>
+                    <p>Expand your skillset with expert-led content</p>
+                </div>
+            </div>
+            <div class="container courses-page-layout">
+                <!-- Sidebar Filters -->
+                <aside class="filters-sidebar">
+                    <h3>Filter</h3>
+                    <div class="filter-group">
+                        <label>Search</label>
+                        <input type="text" id="courseSearch" placeholder="Search courses..."
+                            oninput="filterCourses()" />
+                    </div>
+                    <div class="filter-group">
+                        <label>Category</label>
+                        <select id="categoryFilter" onchange="filterCourses()">
+                            <option value="">All Categories</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Level</label>
+                        <select id="levelFilter" onchange="filterCourses()">
+                            <option value="">All Levels</option>
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Advanced">Advanced</option>
+                        </select>
+                    </div>
+                    <button class="btn-outline full-width" onclick="clearFilters()">Clear Filters</button>
+                </aside>
+                <!-- Course Grid -->
+                <div class="courses-main">
+                    <div class="courses-toolbar">
+                        <span id="courseCount">Loading...</span>
+                        <select id="sortFilter" onchange="filterCourses()">
+                            <option value="popular">Most Popular</option>
+                            <option value="newest">Newest</option>
+                            <option value="rating">Highest Rated</option>
+                        </select>
+                    </div>
+                    <div class="courses-grid" id="allCoursesGrid">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+     PAGE: COURSE DETAIL
+     ============================================================ -->
+        <section id="page-course-detail" class="page hidden">
+            <div id="courseDetailContent"><!-- Rendered by JS --></div>
+        </section>
+
+        <!-- ============================================================
+     PAGE: LEARNING (Video + Quiz)
+     ============================================================ -->
+        <section id="page-learning" class="page hidden">
+            <div class="learning-layout">
+                <!-- Sidebar: Lessons List -->
+                <aside class="lessons-sidebar" id="lessonsSidebar">
+                    <div class="sidebar-header">
+                        <h3 id="learningCourseTitle">Course Title</h3>
+                        <div class="progress-bar-wrap">
+                            <div class="progress-bar-fill" id="learningProgressBar" style="width:0%"></div>
+                        </div>
+                        <span id="learningProgressText">0% complete</span>
+                    </div>
+                    <ul class="lessons-list" id="lessonsList">
+                        <!-- Rendered by JS -->
+                    </ul>
+                </aside>
+                <!-- Main Content -->
+                <div class="learning-main">
+                    <div class="video-section">
+                        <div class="video-wrapper" id="videoWrapper">
+                            <div class="video-placeholder" id="videoPlaceholder">
+                                <div class="play-icon">▶</div>
+                                <p id="currentLessonTitle">Select a lesson</p>
+                            </div>
+                            <!-- Real video element -->
+                            <video id="videoPlayer" class="hidden" controls></video>
+                            <!-- YouTube embed -->
+                            <div id="youtubeEmbed" class="hidden">
+                                <iframe id="youtubeFrame" width="100%" height="100%" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="lesson-info-bar">
+                            <div>
+                                <h2 id="lessonMainTitle">Welcome</h2>
+                                <p id="lessonDescription">Select a lesson from the left to begin.</p>
+                            </div>
+                            <div class="lesson-actions">
+                                <button class="btn-outline" id="markCompleteBtn" onclick="markLessonComplete()">Mark
+                                    Complete ✓</button>
+                                <button class="btn-primary" id="takeQuizBtn" onclick="openQuiz()"
+                                    style="display:none">Take Quiz 📝</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+     PAGE: DASHBOARD
+     ============================================================ -->
+        <section id="page-dashboard" class="page hidden">
+            <div class="page-header-bar">
+                <div class="container">
+                    <h1>My Dashboard</h1>
+                    <p id="dashGreeting">Welcome back!</p>
+                </div>
+            </div>
+            <div class="container">
+                <!-- Stats Row -->
+                <div class="dashboard-stats" id="dashStats">
+                    <!-- Rendered by JS -->
+                </div>
+                <!-- Enrolled Courses -->
+                <div class="dash-section">
+                    <h2>My Courses</h2>
+                    <div class="courses-grid" id="enrolledCoursesGrid">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+                <!-- Recent Certificates -->
+                <div class="dash-section" id="certSection">
+                    <h2>My Certificates</h2>
+                    <div id="dashCertList" class="cert-list">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+     PAGE: CERTIFICATES
+     ============================================================ -->
+        <section id="page-certificates" class="page hidden">
+            <div class="page-header-bar">
+                <div class="container">
+                    <h1>My Certificates</h1>
+                    <p>Your earned credentials</p>
+                </div>
+            </div>
+            <div class="container">
+                <div id="certificatesGrid" class="certificates-grid">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+     PAGE: VERIFY CERTIFICATE
+     ============================================================ -->
+        <section id="page-verify" class="page hidden">
+            <div class="verify-page">
+                <div class="verify-card">
+                    <div class="verify-icon">🔍</div>
+                    <h1>Verify Certificate</h1>
+                    <p>Enter a certificate ID to validate its authenticity</p>
+                    <div class="verify-input-wrap">
+                        <input type="text" id="verifyCertId" placeholder="e.g. SMPS-2024-ABC123" />
+                        <button class="btn-primary" onclick="verifyCertificate()">Verify</button>
+                    </div>
+                    <div id="verifyResult" class="verify-result hidden">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+     PAGE: ADMIN PANEL
+     ============================================================ -->
+        <section id="page-admin" class="page hidden">
+            <div class="admin-layout">
+                <!-- Admin Sidebar -->
+                <aside class="admin-sidebar">
+                    <div class="admin-logo">⚙️ Admin Panel</div>
+                    <nav class="admin-nav">
+                        <a href="#" class="admin-nav-link active" onclick="adminTab('dashboard')" id="atab-dashboard">📊
+                            Dashboard</a>
+                        <a href="#" class="admin-nav-link" onclick="adminTab('courses')" id="atab-courses">📚
+                            Courses</a>
+                        <a href="#" class="admin-nav-link" onclick="adminTab('users')" id="atab-users">👥 Users</a>
+                        <a href="#" class="admin-nav-link" onclick="adminTab('quizzes')" id="atab-quizzes">📝
+                            Quizzes</a>
+                        <a href="#" class="admin-nav-link" onclick="adminTab('certificates')" id="atab-certificates">🏆
+                            Certificates</a>
+                    </nav>
+                </aside>
+                <!-- Admin Content -->
+                <div class="admin-content">
+
+                    <!-- Admin Dashboard -->
+                    <div id="admin-panel-dashboard" class="admin-panel active">
+                        <h1>Overview</h1>
+                        <div class="admin-stats-grid" id="adminStatsGrid"></div>
+                        <div class="admin-two-col">
+                            <div class="admin-card">
+                                <h3>Recent Enrollments</h3>
+                                <table class="admin-table" id="recentEnrollmentsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Student</th>
+                                            <th>Course</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recentEnrollmentsBody"></tbody>
+                                </table>
+                            </div>
+                            <div class="admin-card">
+                                <h3>Top Courses</h3>
+                                <div id="topCoursesList"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Admin Courses -->
+                    <div id="admin-panel-courses" class="admin-panel hidden">
+                        <div class="panel-header">
+                            <h1>Manage Courses</h1>
+                            <button class="btn-primary" onclick="openAddCourseForm()">+ Add Course</button>
+                        </div>
+                        <!-- Add/Edit Course Form -->
+                        <div id="addCourseForm" class="admin-form hidden">
+                            <h3 id="courseFormTitle">Add New Course</h3>
+                            <input type="hidden" id="editCourseId" />
+                            <div class="form-row">
+                                <div class="form-group"><label>Title</label><input type="text" id="courseTitle"
+                                        placeholder="Course title" /></div>
+                                <div class="form-group"><label>Category</label><input type="text" id="courseCategory"
+                                        placeholder="e.g. Electronics" /></div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group"><label>Level</label>
+                                    <select id="courseLevel">
+                                        <option>Beginner</option>
+                                        <option>Intermediate</option>
+                                        <option>Advanced</option>
+                                    </select>
+                                </div>
+                                <div class="form-group"><label>Duration</label><input type="text" id="courseDuration"
+                                        placeholder="e.g. 8h 30m" /></div>
+                            </div>
+                            <div class="form-group"><label>Description</label><textarea id="courseDesc" rows="3"
+                                    placeholder="Course description..."></textarea></div>
+                            <div class="form-group"><label>Thumbnail URL</label><input type="text" id="courseThumbnail"
+                                    placeholder="https://..." /></div>
+                            <div class="form-group"><label>Instructor</label><input type="text" id="courseInstructor"
+                                    placeholder="Instructor name" /></div>
+                            <h4>Lessons</h4>
+                            <div id="lessonsFormList"></div>
+                            <button class="btn-ghost" onclick="addLessonField()">+ Add Lesson</button>
+                            <div class="form-actions">
+                                <button class="btn-primary" onclick="saveCourse()">Save Course</button>
+                                <button class="btn-outline" onclick="cancelCourseForm()">Cancel</button>
+                            </div>
+                        </div>
+                        <table class="admin-table" id="adminCoursesTable">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Category</th>
+                                    <th>Level</th>
+                                    <th>Enrolled</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminCoursesBody"></tbody>
+                        </table>
+                    </div>
+
+                    <!-- Admin Users -->
+                    <div id="admin-panel-users" class="admin-panel hidden">
+                        <h1>Manage Users</h1>
+                        <input type="text" class="admin-search" id="userSearchInput" placeholder="Search users..."
+                            oninput="filterAdminUsers()" />
+                        <table class="admin-table" id="adminUsersTable">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Enrolled</th>
+                                    <th>Joined</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminUsersBody"></tbody>
+                        </table>
+                    </div>
+
+                    <!-- Admin Quizzes -->
+                    <div id="admin-panel-quizzes" class="admin-panel hidden">
+                        <div class="panel-header">
+                            <h1>Manage Quizzes</h1>
+                            <button class="btn-primary" onclick="openAddQuizForm()">+ Add Quiz</button>
+                        </div>
+                        <div id="addQuizForm" class="admin-form hidden">
+                            <h3>Add / Edit Quiz</h3>
+                            <input type="hidden" id="editQuizId" />
+                            <div class="form-group"><label>For Course</label>
+                                <select id="quizCourseSelect"></select>
+                            </div>
+                            <div id="questionsFormList"></div>
+                            <button class="btn-ghost" onclick="addQuestionField()">+ Add Question</button>
+                            <div class="form-actions">
+                                <button class="btn-primary" onclick="saveQuiz()">Save Quiz</button>
+                                <button class="btn-outline" onclick="cancelQuizForm()">Cancel</button>
+                            </div>
+                        </div>
+                        <table class="admin-table" id="adminQuizzesTable">
+                            <thead>
+                                <tr>
+                                    <th>Course</th>
+                                    <th>Questions</th>
+                                    <th>Passing Score</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminQuizzesBody"></tbody>
+                        </table>
+                    </div>
+
+                    <!-- Admin Certificates -->
+                    <div id="admin-panel-certificates" class="admin-panel hidden">
+                        <div class="panel-header">
+                            <h1>Certificates</h1>
+                            <button class="btn-primary" onclick="issueCertificateAdmin()">+ Issue Certificate</button>
+                        </div>
+                        <table class="admin-table" id="adminCertsTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Student</th>
+                                    <th>Course</th>
+                                    <th>Issued</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminCertsBody"></tbody>
+                        </table>
+                    </div>
+
+                </div><!-- /admin-content -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ============================================================
+     FOOTER
+     ============================================================ -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="nav-logo"><span class="logo-icon">⚡</span><span
+                            class="logo-text">SMPS<em>Course</em></span></div>
+                    <p>The premier platform for power electronics and engineering education.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Platform</h4>
+                    <a href="#" onclick="navigate('courses')">Courses</a>
+                    <a href="#" onclick="navigate('verify')">Verify Certificate</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Account</h4>
+                    <a href="#" onclick="openModal('auth','login')">Login</a>
+                    <a href="#" onclick="openModal('auth','signup')">Sign Up</a>
+                    <a href="#" onclick="navigate('dashboard')">Dashboard</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Contact</h4>
+                    <a href="#">support@smpscourse.com</a>
+                    <a href="#">+1 (555) 000-0001</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 SMPS Course. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast notification -->
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
