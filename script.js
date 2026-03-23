@@ -8,7 +8,8 @@
 // ============================================================
 const API_BASE_URL = window.location.hostname === 'localhost'
     ? 'http://localhost:5001/api'
-    : 'https://your-backend-url.onrender.com/api';
+    : 'https://smps-course-platform.onrender.com/api';
+
 // ============================================================
 // AUTH MODULE
 // ============================================================
@@ -179,11 +180,15 @@ function switchAuthTab(tab) {
     const signupTab = document.getElementById('signupTab');
 
     if (tab === 'login') {
-        loginForm.classList.remove('hidden'); signupForm.classList.add('hidden');
-        loginTab.classList.add('active'); signupTab.classList.remove('active');
+        loginForm.classList.remove('hidden');
+        signupForm.classList.add('hidden');
+        loginTab.classList.add('active');
+        signupTab.classList.remove('active');
     } else {
-        signupForm.classList.remove('hidden'); loginForm.classList.add('hidden');
-        signupTab.classList.add('active'); loginTab.classList.remove('active');
+        signupForm.classList.remove('hidden');
+        loginForm.classList.add('hidden');
+        signupTab.classList.add('active');
+        loginTab.classList.remove('active');
     }
 }
 
@@ -561,7 +566,6 @@ function loadLesson(lessonId) {
         // Check if it's a YouTube URL (any format)
         if (url.includes('youtube.com') || url.includes('youtu.be')) {
             // Use the exact URL as-is in the iframe
-            // The YouTube iframe can handle watch URLs, embed URLs, and short URLs
             let embedUrl = url;
 
             // If it's a youtube.com/watch?v= format, convert to embed for better compatibility
@@ -591,7 +595,6 @@ function loadLesson(lessonId) {
         }
         // For other URLs, try to embed directly
         else {
-            // Try to load as iframe for any other URL
             youtubeFrame.src = url;
             youtubeEmbed.classList.remove('hidden');
             videoPlaceholder.classList.add('hidden');
@@ -1138,7 +1141,7 @@ async function renderAdminUsers() {
         `).join('');
     } catch (error) {
         console.error('Error loading admin users:', error);
-        document.getElementById('adminUsersBody').innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--red)">Error loading users</td></tr>`;
+        document.getElementById('adminUsersBody').innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--red)">Error loading users</td></tr>';
     }
 }
 
@@ -1192,7 +1195,7 @@ async function renderAdminQuizzes() {
         `).join('');
     } catch (error) {
         console.error('Error loading admin quizzes:', error);
-        document.getElementById('adminQuizzesBody').innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--red)">Error loading quizzes</td></tr>`;
+        document.getElementById('adminQuizzesBody').innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--red)">Error loading quizzes</td></tr>';
     }
 }
 
@@ -1343,7 +1346,7 @@ async function renderAdminCertificates() {
         `).join('');
     } catch (error) {
         console.error('Error loading admin certificates:', error);
-        document.getElementById('adminCertsBody').innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--red)">Error loading certificates</td></tr>`;
+        document.getElementById('adminCertsBody').innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--red)">Error loading certificates</td></tr>';
     }
 }
 
